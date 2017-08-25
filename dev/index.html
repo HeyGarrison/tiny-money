@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge, chrome=1">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">  
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <title>Tiny Money</title>
+
+  <link rel="shortcut icon" type="image/png" href="./favicon.png">
+  <link rel="icon" type="image/x-icon" href="./favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./favicon.png">
+
+  <meta name="robots" content="noindex">
+</head>
+
+<body>
+  <div class="ptr">
+    <div class="arrow">
+      <i class="genericon genericon-next"></i>
+    </div>
+
+    <div class="loading">
+      <span id="l1"></span>
+      <span id="l2"></span>
+      <span id="l3"></span>
+    </div>
+  </div>
+
+  <div id="app" v-cloak>
+    <div class="user">
+      <div class="block assets">
+        <span class="label">Assets</span>
+        <span class="value">{{user.credit | money}}</span>
+      </div>
+
+      <div class="block debts">
+        <span class="label">Debts</span>
+        <span class="value">{{user.debt | money}}</span>
+      </div>
+
+      <div class="block net">
+        <span class="label">Net</span>
+        <span class="value">{{user.net | money}}</span>
+      </div>
+    </div>
+
+    <transition-group
+      tag="ul"
+      name="transactions" 
+      class="transactions"
+      v-show="sortedTransactions.length"
+      @enter="enterTransaction"
+    >
+      <v-touch 
+        tag="li"
+        class="transaction"
+        v-for="t in sortedTransactions"
+        @panstart="panStartTransaction($event, t)"
+        @pan="panTransaction($event, t)"
+        @panend="panEndTransaction($event, t)"
+        :pan-options="{direction: 'horizontal', threshold: 0}"
+        :class="[{hidden: t.hidden, animate: t.animate}, t.klass]"
+        :key="t._id"
+      >
+        <div class="content">
+          <div class="date">
+            <span class="day">{{t.day}}</span>
+            <span class="month">{{t.month}}</span>
+          </div>
+  
+          <div class="details">
+            <div class="primary">
+              <div class="name">{{t.name}}</div>
+              <div class="amount">{{t.amount | money}}</div>
+            </div>
+  
+            <div class="secondary">
+              <div class="meta">
+                <span class="tag">{{t.info || t.number}}</span>
+              </div>
+  
+              <ul class="categories">
+                <li v-for="c in t.category" class="category">{{c}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div 
+          class="action genericon" 
+          :class="[{active: t.active, animate: t.animate}, t.hidden ? 'genericon-show' : 'genericon-hide']"
+        ></div>
+      </v-touch>
+    </transition-group>
+
+    <ul class="banks">
+      <li class="bank" v-for="b in sortedBanks" :key="b._id">
+        <h1 :class="b.net >= 0 ? 'negative' : 'positive'">
+          <span class="name">{{b.name}}</span>
+          <span class="net" v-if="b.accounts.length > 1">{{b.net | money}}</span>
+        </h1>
+
+        <ul class="accounts">
+          <li class="account" v-for="a in b.accounts" :class="accountKlass(a)">
+            <div class="info">
+              <span class="name">{{a.meta.name}}</span>
+              <span class="number">{{a.meta.number}}</span>
+            </div>
+
+            <span class="current">{{a.balance.current | money}}</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <transition-group
+      tag="ul"
+      name="transactions" 
+      class="transactions"
+      v-show="sortedTransactionsHidden.length"
+      @enter="enterTransaction"
+    >
+      <v-touch 
+        tag="li"
+        class="transaction"
+        v-for="t in sortedTransactionsHidden"
+        @panstart="panStartTransaction($event, t)"
+        @pan="panTransaction($event, t)"
+        @panend="panEndTransaction($event, t)"
+        :pan-options="{direction: 'horizontal', threshold: 0}"
+        :class="[{hidden: t.hidden, animate: t.animate}, t.klass]"
+        :key="t._id"
+      >
+        <div class="content">
+          <div class="date">
+            <span class="day">{{t.day}}</span>
+            <span class="month">{{t.month}}</span>
+          </div>
+
+          <div class="details">
+            <div class="primary">
+              <div class="name">{{t.name}}</div>
+              <div class="amount">{{t.amount | money}}</div>
+            </div>
+
+            <div class="secondary">
+              <div class="meta">
+                <span class="tag">{{t.info || t.number}}</span>
+              </div>
+
+              <ul class="categories">
+                <li v-for="c in t.category" class="category">{{c}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div 
+          class="action genericon" 
+          :class="[{active: t.active, animate: t.animate}, t.hidden ? 'genericon-show' : 'genericon-hide']"
+        ></div>
+      </v-touch>
+    </transition-group>
+  </div>
+</body>
+</html>
