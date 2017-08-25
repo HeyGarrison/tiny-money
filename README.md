@@ -23,5 +23,8 @@
 - `npm run prod` to build for production
 - `npm run deploy` to build and deploy via [surge](http://surge.sh/)
 
+---
+
 ![Desktop Screenshot](https://tyler.link/mBr5/Desktop.png)
+
 ![Mobile Screenshot](https://tyler.link/mBcz/Phone.png)
