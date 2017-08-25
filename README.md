@@ -25,6 +25,6 @@
 
 ---
 
-![Desktop Screenshot](https://tyler.link/mBr5/Desktop.png)
+![Desktop Screenshot](http://tyler.link/mCM4/Desktop.png)
 
-![Mobile Screenshot](https://tyler.link/mBcz/Phone.png)
+![Mobile Screenshot](http://tyler.link/mBgj/Phone.png)
